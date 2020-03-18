@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const errorHandler = require('./helpers/error.handler')
+const errorHandler = require('./helpers/error.handler');
+const basicAuth = require('./helpers/auth');
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(basicAuth)
 app.use(errorHandler);
 
 require('./routes/routes')(app);
