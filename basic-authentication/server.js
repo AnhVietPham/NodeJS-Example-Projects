@@ -1,16 +1,20 @@
-const express = require('express');
+const express = require("express");
 const bodyParser = require('body-parser');
-const errorHandler = require('./helpers/error.handler');
-const basicAuth = require('./helpers/auth');
+const error = require('./helpers/error.handler');
+const auth = require('./helpers/auth');
 
 const app = express();
 
 app.use(bodyParser.json());
-app.use(basicAuth)
-app.use(errorHandler);
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(auth.basicAuth)
 
 require('./routes/routes')(app);
 
-app.listen(9999, () => {
-    console.log('Server is running on port 9999');
+app.use(error.errorHandler)
+
+
+app.listen(80, () => {
+    console.log('Server is running on port 8989');
 })
