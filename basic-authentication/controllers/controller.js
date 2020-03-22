@@ -7,3 +7,10 @@ exports.authenticate = (req, res, next) => {
     }))
     .catch(err => next(err));
 }
+
+exports.getAll = (req, res, next) => {
+    userService.getAll()
+    .then(users => res.json(users))
+    .catch(err => next(err));
+
+}

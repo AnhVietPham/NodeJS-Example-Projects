@@ -1,6 +1,11 @@
 const userService = require('../users/user.service')
 
-exports.basicAuth = (req, res, next) => {
+
+module.exports = {
+    basicAuth
+}
+
+async function basicAuth(req, res, next) {
     if(req.path == '/users/signin'){
         return next()
     }
@@ -13,7 +18,7 @@ exports.basicAuth = (req, res, next) => {
     const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [username, password] = credentials.split(':');
-    const user = userService.authenticate({username, password});
+    const user = await userService.authenticate({username, password});
 
     if(!user){
         return res.status(401).json({
