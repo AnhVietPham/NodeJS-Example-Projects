@@ -1,6 +1,8 @@
+const express = require('express');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
-const Dishes = require('./models/dishes');
+const app = express();
+const dishRouter = require('./routes/dishRouter');
 
 const url = 'mongodb://localhost:27017/conFusion';
 const connect = mongoose.connect(url);
@@ -9,3 +11,9 @@ connect.then((db) => {
     console.log("Connected  correctly to server ");
 
 }, (err) => { console.log(err); });
+
+app.use('/dishes', dishRouter);
+
+app.listen(9999, () => {
+    console.log('Server is connecting on port 9999!')
+})

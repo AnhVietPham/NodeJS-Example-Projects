@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 require('mongoose-currency').loadType(mongoose);
-const Currency = mongoose.Types.Currency;
 
 const commentSchema = new Schema({
     rating: {
@@ -52,6 +51,10 @@ const dishSchema = new Schema({
     featured: {
         type: Boolean,
         default: false
+    },
+    description: {
+        type: String,
+        default: ""
     },
     comments: [commentSchema]
 },{
