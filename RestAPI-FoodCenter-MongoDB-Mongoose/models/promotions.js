@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 require('mongoose-currency').loadType;
 
+var Currency = mongoose.Types.Currency;
+
 const promotionSchema = new Schema({
        name: {
               type: String,
               required: true,
               default: ""
        },
-       imgae: {
+       image: {
               type: String,
               required: true,
               default: ""
@@ -19,7 +21,7 @@ const promotionSchema = new Schema({
               default: "",
        },
        price: {
-              type: String,
+              type: Currency,
               require: true,
               min: 0
        },
