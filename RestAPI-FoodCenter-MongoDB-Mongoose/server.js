@@ -1,6 +1,6 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const auth = require('./helpers/auth');
 const app = express();
 const dishRouter = require('./routes/dishRouter');
 const promotionRouter = require('./routes/promotionRouter');
@@ -13,6 +13,8 @@ connect.then((db) => {
     console.log("Connected  correctly to server ");
 
 }, (err) => { console.log(err); });
+
+app.use(auth.basicAuth);
 
 app.use('/dishes', dishRouter);
 app.use('/promotions', promotionRouter);
