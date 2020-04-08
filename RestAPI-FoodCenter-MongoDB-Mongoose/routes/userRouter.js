@@ -71,6 +71,7 @@ userRouter.get('/signout', (req, res, next) => {
        if (req.session) {
               req.session.destroy();
               res.clearCookie('session-id');
+              res.end('You are signed out!');
        } else {
               var err = new Error('You are not signed in!');
               err.statusCode = 403;
