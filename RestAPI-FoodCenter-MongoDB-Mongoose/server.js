@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const auth = require('./helpers/auth');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const passport = require('passport');
+const authenticate = require('./authenticate')
+
 const app = express();
+
 const dishRouter = require('./routes/dishRouter');
 const promotionRouter = require('./routes/promotionRouter');
 const leaderShipRouter = require('./routes/leaderShipRouter');
@@ -26,10 +30,13 @@ app.use(session({
     resave: false,
     store: new FileStore
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/users', usersRouter);
 
 app.use(auth.basicAuth);
-
 app.use('/dishes', dishRouter);
 app.use('/promotions', promotionRouter);
 app.use('/leaders', leaderShipRouter);
