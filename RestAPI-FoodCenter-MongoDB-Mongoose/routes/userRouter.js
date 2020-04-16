@@ -37,11 +37,21 @@ userRouter.post('/signup', (req, res, next) => {
                      res.setHeader('Content-Type', 'application/json');
                      res.json({ err: err });
               } else {
-                     passport.authenticate('local')(req, res, () => {
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', 'application/json');
-                            res.json({ success: true, status: 'Registration Successful!' });
-                     });
+                     if (req.body.firstName) user.firstName = req.body.firstName;
+                     if (req.body.lastName) user.lastName = req.body.lastName;
+                     user.save((err, user) => {
+                            if (err) {
+                                   res.statusCode = 500;
+                                   res.setHeader('Content-Type', 'application/json');
+                                   res.json({ err: err });
+                                   return ;
+                            }
+                            passport.authenticate('local')(req, res, () => {
+                                   res.statusCode = 200;
+                                   res.setHeader('Content-Type', 'application/json');
+                                   res.json({ success: true, status: 'Registration Successful!' });
+                            });
+                     })
               }
        });
 });
@@ -85,10 +95,10 @@ userRouter.post('/signup', (req, res, next) => {
 // });
 
 userRouter.post('/signin', passport.authenticate('local'), (req, res) => {
-       var token = authenticate.getToken({_id: req.user._id});
+       var token = authenticate.getToken({ _id: req.user._id });
        res.statusCode = 200;
        res.setHeader('Content-Type', 'application/json');
-       res.json({success: true, token: token, status: 'You are successfully logged in!'});
+       res.json({ success: true, token: token, status: 'You are successfully logged in!' });
 });
 
 userRouter.get('/signout', (req, res, next) => {
