@@ -1,5 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
 const auth = require('./helpers/auth');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -8,6 +11,11 @@ const authenticate = require('./authenticate')
 var config = require('./config');
 
 const app = express();
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer({
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.cert'),
+  }, app);
 
 const dishRouter = require('./routes/dishRouter');
 const promotionRouter = require('./routes/promotionRouter');
@@ -42,7 +50,10 @@ app.use('/dishes', dishRouter);
 app.use('/promotions', promotionRouter);
 app.use('/leaders', leaderShipRouter);
 
+httpServer.listen(9999, () => {
+    console.log('HTTP Server running on port 9999');
+});
 
-app.listen(9999, () => {
-    console.log('Server is connecting on port 9999!')
-})
+httpsServer.listen(8888, () => {
+    console.log('HTTPS Server running on port 8888');
+});

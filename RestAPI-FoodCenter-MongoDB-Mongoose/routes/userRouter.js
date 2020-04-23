@@ -44,7 +44,7 @@ userRouter.post('/signup', (req, res, next) => {
                                    res.statusCode = 500;
                                    res.setHeader('Content-Type', 'application/json');
                                    res.json({ err: err });
-                                   return ;
+                                   return;
                             }
                             passport.authenticate('local')(req, res, () => {
                                    res.statusCode = 200;
@@ -111,6 +111,16 @@ userRouter.get('/signout', (req, res, next) => {
               err.statusCode = 403;
               next(err);
        }
+});
+
+userRouter.get('/',authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+       User.find({})
+              .then((users) => {
+                     res.status = 200;
+                     res.setHeader('Content-Type', 'application/json');
+                     res.json(users);
+              }, (err) => next(err))
+              .catch((err) => next(err));
 });
 
 module.exports = userRouter;
