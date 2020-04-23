@@ -15,12 +15,14 @@ const httpServer = http.createServer(app);
 const httpsServer = https.createServer({
     key: fs.readFileSync('./server.key'),
     cert: fs.readFileSync('./server.cert'),
-  }, app);
+}, app);
 
 const dishRouter = require('./routes/dishRouter');
 const promotionRouter = require('./routes/promotionRouter');
 const leaderShipRouter = require('./routes/leaderShipRouter');
 const usersRouter = require('./routes/userRouter');
+const uploadRouter = require('./routes/uploadRouter');
+
 const FileStore = require('session-file-store')(session);
 
 const url = config.mongoUrl;
@@ -49,6 +51,7 @@ app.use('/users', usersRouter);
 app.use('/dishes', dishRouter);
 app.use('/promotions', promotionRouter);
 app.use('/leaders', leaderShipRouter);
+app.use('/imageUpload', uploadRouter);
 
 httpServer.listen(9999, () => {
     console.log('HTTP Server running on port 9999');
