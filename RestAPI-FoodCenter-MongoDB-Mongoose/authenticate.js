@@ -1,7 +1,8 @@
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var JwtStrategy = require('passport-jwt').Strategy;
-var ExtractJwt = require('passport-jwt').ExtractJwt;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const FacebookTokenStrategy = require('passport-facebook-token');
 var jwt = require('jsonwebtoken');
 
 var config = require('./config');
@@ -40,6 +41,33 @@ exports.jwtPassport = passport.use(new JwtStrategy(otps, (jwt_payload, done) => 
               }
               else {
                      return done(null, false);
+              }
+       });
+}));
+
+exports.facebookPassport = passport.use(new FacebookTokenStrategy({
+       clientID: config.facebook.clientId,
+       clientSecret: config.facebook.clientSecret
+}, (accessToken, refreshToken, profile, done) => {
+       User.findOne({ facebookId: profile.id }, (err, user) => {
+              if (err) {
+                     return done(err, false);
+              }
+              if (!err && user !== null) {
+                     return done(null, user);
+              } else {
+                     user = new User({ username: profile.displayName });
+                     user.facebookId = profile.id;
+                     user.firstName = profile.name.firstName;
+                     user.lastName = profile.name.lastName;
+                     user.save((err, user) => {
+                            if (err) {
+                                   done(err, false);
+                            }
+                            else {
+                                   done(null, user);
+                            }
+                     });
               }
        });
 }));

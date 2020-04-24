@@ -11,11 +11,7 @@ const authenticate = require('./authenticate')
 var config = require('./config');
 
 const app = express();
-const httpServer = http.createServer(app);
-const httpsServer = https.createServer({
-    key: fs.readFileSync('./server.key'),
-    cert: fs.readFileSync('./server.cert'),
-}, app);
+
 
 const dishRouter = require('./routes/dishRouter');
 const promotionRouter = require('./routes/promotionRouter');
@@ -41,9 +37,15 @@ connect.then((db) => {
 //     resave: false,
 //     store: new FileStore
 // }));
-
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 app.use(passport.initialize());
 // app.use(passport.session());
+
+
+app.get('/',(req, res) => {
+    res.render('index', { user: req.user });
+});
 
 app.use('/users', usersRouter);
 
@@ -52,6 +54,12 @@ app.use('/dishes', dishRouter);
 app.use('/promotions', promotionRouter);
 app.use('/leaders', leaderShipRouter);
 app.use('/imageUpload', uploadRouter);
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer({
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.cert'),
+}, app);
 
 httpServer.listen(9999, () => {
     console.log('HTTP Server running on port 9999');
