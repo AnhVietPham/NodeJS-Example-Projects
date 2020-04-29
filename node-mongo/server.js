@@ -8,7 +8,7 @@ const dbname = 'conFusion';
 
 MongoClient.connect(url).then((client) =>{
     console.log('Connected correctly to server');
-    const db = client.db(dbname);
+    const db = client.dcb(dbname);
 
     dbOper.insertDocument(db, { name: "DennisPham", description: "Call back hell and Promises" }, "dishes")
     .then((result) => {
