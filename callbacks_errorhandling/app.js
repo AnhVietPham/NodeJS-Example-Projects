@@ -10,7 +10,6 @@ app.use(bodyParse.json());
  */
 app.get('/example/one', (req, res, next) => {
        console.log('The response will be sent by the next function!!')
-       next()
 }, (req, res) => {
        console.log('Hello from B!');
        res.send('Hello from B!')
